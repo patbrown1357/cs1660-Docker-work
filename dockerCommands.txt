@@ -1,0 +1,2 @@
+docker build -t pob6/hw-one .
+docker run -rm -it --name hw_one_container -p 8080:8080 pob6/hw-one java helloWorld
