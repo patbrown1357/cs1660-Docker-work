@@ -1,0 +1,8 @@
+Logic Image:
+https://hub.docker.com/repository/docker/pob6/sentiment-analysis-logic
+
+Frontend Image:
+https://hub.docker.com/repository/docker/pob6/sentiment-analysis-frontend
+
+Webapp Image:
+https://hub.docker.com/repository/docker/pob6/sentiment-analysis-webapp

@@ -1,10 +1,17 @@
-This repository contains the source files needed to follow the series [Kubernetes and everything else](https://rinormaloku.com/series/kubernetes-and-everything-else/) or summarized as an article in [Learn Kubernetes in Under 3 Hours: A Detailed Guide to Orchestrating Containers](https://medium.freecodecamp.org/learn-kubernetes-in-under-3-hours-a-detailed-guide-to-orchestrating-containers-114ff420e882)
-
-To learn more about Kubernetes and other related topics check the following examples with the **Sentiment Analysis** application:
-
-* [Kubernetes Volumes in Practice](https://rinormaloku.com/kubernetes-volumes-in-practice/):
-* [Ingress Controller - simplified routing in Kubernetes](https://www.orange-networks.com/blogs/210-ingress-controller-simplified-routing-in-kubernetes)
-* [Docker Compose in Practice](https://github.com/rinormaloku/k8s-mastery/tree/docker-compose)
-* [Istio around everything else series](https://rinormaloku.com/series/istio-around-everything-else/)
-* [Simple CI/CD for Kubernetes with Azure DevOps](https://www.orange-networks.com/blogs/224-azure-devops-ci-cd-pipeline-to-deploy-to-kubernetes)
-* Envoy series - to be added!
+# How to run on GCP
+1. Pull all 3 images into GCP
+2. Tag them with your gcp registry and project name
+3. push these images to the gcp docker image registry
+4. Navigate to the clusters tab and ssh into the cluster
+    1. or create a cluster and then ssh into it
+5. From this project directory upload these files from the 'resource-manifests' directory to the gcp cloud shell
+    1. sa-frontend-deployment.yaml
+    2. sa-logic-deployment.yaml
+    3. sa-web-app-deployment.yaml
+    4. service-sa-frontend-lb.yaml
+    5. service-sa-logic.yaml
+    6. service-sa-web-app.yaml
+6. run 'minikube start'
+7. run kubectl create -f 'filename' and replace filename with the 6 files above
+8. Restart cloud shell. (This step may be optional as I'm not sure if it wasn't just my client where sa-frontend-lb wouldn't expose an external ip without a restart)
+9. Run 'minikube service sa-frontend-lb' and that should open the app.
