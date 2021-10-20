@@ -1,9 +1,6 @@
 import boto3
 import csv
 
-aws_key = 'AKIA6MAI2IFRXIEUWC3H'
-aws_secret_key='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'
-
 def main(): 
 
  
