@@ -15,12 +15,12 @@ def main():
     aws_access_key_id = aws_key,
     aws_secret_access_key=aws_secret_key)
 
-    # try:
-    #     s3.create_bucket(Bucket='pob6-bucket-test', CreateBucketConfiguration={
-    #         'LocationConstraint':'us-west-2'
-    #     })
-    # except Exception as e:
-    #     print(e)
+    try:
+        s3.create_bucket(Bucket='pob6-bucket-test', CreateBucketConfiguration={
+            'LocationConstraint':'us-west-2'
+        })
+    except Exception as e:
+        print(e)
 
     bucket = s3.Bucket("pob6-bucket-test")
     bucket.Acl().put(ACL='public-read')
@@ -30,7 +30,7 @@ def main():
     s3.Object('pob6-bucket-test', 'test').Acl().put(ACL='public-read')
 
     dyndb = boto3.resource('dynamodb',
-        region_name='us_west_name',
+        region_name='us-west-2',
         aws_access_key_id=aws_key,
         aws_secret_access_key=aws_secret_key)
 
@@ -40,7 +40,7 @@ def main():
             KeySchema= [
                 {
                     'AttributeName': 'PartitionKey',
-                    'KeyTypes':'RANGE'
+                    'KeyType':'HASH'
                 },
                 {
                     'AttributeName': 'RowKey',
@@ -49,7 +49,7 @@ def main():
             ],
             AttributeDefinitions=[
                 {
-                    'AttributeName':'PartitinoKey',
+                    'AttributeName':'PartitionKey',
                     'AttributeType':'S'
                 },
                 {
@@ -71,38 +71,32 @@ def main():
 
     print(table.item_count)
 
-    with open('..\spreadsheets\experiments.csv', 'rb') as csvfile:
-        csvf = csv.reader(csvfile, delimeter=',', quotechar='|')
+    with open('.\spreadsheets\experiments.csv', 'r', encoding='utf-8') as csvfile:
+        csvf = csv.reader(csvfile, delimiter=',', quotechar='|')
+        next(csvf)
         for item in csvf:
             print(item)
-            body = open('..\spreadsheets\datafiles\\'+item[3], 'rb')
-            s3.Object('pob6-example-test2', item[3]).put(Body=body)
+            body = open('.\spreadsheets\datafiles\\'+item[4], 'rb')
+            s3.Object("pob6-bucket-test", item[4]).put(Body=body)
+            md = s3.Object("pob6-bucket-test", item[4]).Acl().put(ACL='public-read')
 
-            url = " https://s3-us-west-2.amazonaws.com/pob6-example-test/"+item[3]
+            url = " https://s3-us-west-2.amazonaws.com/pob6-example-test/"+item[4]
             metadata_item = { 'PartitionKey': item[0], 'RowKey': item[1], 
-                                'description': item[4], 'date': item[2], 'url':url }
+                                'temp': item[1], 'conductivity': item[2],
+                                'concentration':item[3], 'url':url }
             try:
                 table.put_item(Item=metadata_item)
             except:
                     print("item may already be there or another failure")
 
-    ['experiment1', '1', '3/15/2002', 'exp1', 'this is the comment']
-    ['experiment1', '2', '3/15/2002', 'exp2', 'this is the comment2']
-    ['experiment1', '3', '3/16/2002', 'exp3', 'this is the comment3']
-    ['experiment1', '4', '3/16/2002', 'exp4', 'this is the comment4']
-
     response = table.get_item(
         Key={
-            'PartitionKey':'experiment3',
-            'RowKey':'4'
+            'PartitionKey':'2',
+            'RowKey':'-2'
         }
     )
     item = response['Item']
     print(item)
-
-    {u'url': u'https://s3-us-west-2.amazonaws.com/pob6-example-test/exp4', 
-        u'date':u'3/16/2002', u'PartitionKey':u'experiment3', u'description':u'this is the comment233',
-        u'RowkKey': u'4'}
 
     response
 
