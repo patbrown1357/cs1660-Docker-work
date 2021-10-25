@@ -89,12 +89,16 @@ def main():
             except:
                     print("item may already be there or another failure")
 
+    query={
+        'PartitionKey':'2',
+        'RowKey':'-2'
+    }
+
     response = table.get_item(
-        Key={
-            'PartitionKey':'2',
-            'RowKey':'-2'
-        }
+        Key=query
     )
+    print('Query')
+    print(str(query))
     item = response['Item']
     print(item)
 
