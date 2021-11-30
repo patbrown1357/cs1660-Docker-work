@@ -51,7 +51,7 @@ public class WordCount {
                     for(Text word: wordCount.keySet()) {
                         invert.put(wordCount.get(word), word);
                     }
-
+                    int i = 0;
                     for(Integer count: invert.descendingKeySet()) {
                         context.write(invert.get(count), count);
                     }
